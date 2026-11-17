@@ -1,0 +1,120 @@
+*shiftlines.txt*                 Shift lines by one line, along with the mark.
+
+==============================================================================
+Contents                                                 *shiftlines-contents*
+
+
+1. Configuration .................................. |shiftlines-configuration|
+  - Options ............................................. |shiftlines-options|
+2. Key Mappings .................................... |shiftlines-key-mappings|
+3. Lua Module(API) ................................... |shiftlines-lua-module|
+  - shiftlines .............................................. |shiftlines-api|
+5. Testing .............................................. |shiftlines-testing|
+
+
+==============================================================================
+1. Configuration                                    *shiftlines-configuration*
+
+
+This plugin can be configured by passing a table of options to the `setup()`
+|shiftlines-api-setup|.
+Available options are listed in the next section.
+
+
+                                                          *shiftlines-options*
+Options ~
+
+
+                                                   *shiftlines-opt-event_name*
+  event_name ~
+
+    The user event name issued after the shift is complete.
+    The buffer number for which the shift occurred is passed as event data.
+      e.g., ev.data => { buf_id = 2 }
+
+    Type: `string` ~
+
+    Default: 'ShiftlinesLineShifted' ~
+
+
+==============================================================================
+2. Key Mappings                                      *shiftlines-key-mappings*
+
+
+This plugin does not provide a default keymap, and will have no effect until
+you add your own maps to it. Below is an example:
+>lua
+  -- Shift the target line(s) up by one line.
+  vim.keymap.set({ 'n', 'x' }, '<C-Up>', function()
+    require('shiftlines').shift_upward()
+  end)
+
+  -- Shift the target line(s) down by one line.
+  vim.keymap.set({ 'n', 'x' }, '<C-Down>', function()
+    require('shiftlines').shift_downward()
+  end)
+<
+
+==============================================================================
+3. Lua Module(API)                                     *shiftlines-lua-module*
+
+
+                                                              *shiftlines-api*
+  Module:shiftlines ~
+>lua
+  local api = require('shiftlines')
+<
+
+                                                        *shiftlines-api-setup*
+  api.setup({options}) ~
+
+    Initializes and configures plugin with the provided {options}.
+
+    Parameters: ~
+      {options} `{ [string]: any }?` See |shiftlines-options|.
+
+
+                                               *shiftlines-api-shift_downward*
+  api.shift_downward() ~
+
+    Shift lines downward by one line, along with the mark.
+    Trigger a user event after completion.
+
+
+                                                 *shiftlines-api-shift_upward*
+  api.shift_upward() ~
+
+    Shift lines upward by one line, along with the mark.
+    Trigger a user event after completion.
+
+
+==============================================================================
+5. Testing                                                *shiftlines-testing*
+
+
+Install Lua-5.1
+  - Neovim and its plugins explicitly require version 5.1.
+
+Install Mini.test (https://github.com/nvim-mini/mini.test)
+  - As a Neovim plugin.
+  - Also, install the dependent files under the deps directory.
+  - Set the plugin option to treat "specs/*_spec.lua" as a test file.
+
+Writing Test
+  - Use specs/template.lua as a template.
+
+Run Test
+  - On Neovim:
+    - Per file: Run ":lua MiniTest.run_file()" in the buffer for the target
+      test file.
+    - All tests: Run ":lua MiniTest.run()" in any buffer.
+  - On the shell: >shell
+    nvim --headless --noplugin -u ./scripts/minimal_init.lua -c "lua MiniTest.run()"
+<
+  - The working directory of the launched Neovim or the runtime directory of
+    the shell must be the root directory of the plugin project.
+
+
+==============================================================================
+
+vim:tw=78:ts=8:noet:ft=help:norl:
